@@ -319,11 +319,11 @@
 				'-o-transform':'none',
 				'-ms-transform':'none',
 				'transform':'none',
-				'-webkit-transition':'0',
+				'-webkit-transition':'0ms',
 				'-moz-transition':'0ms',
-				'-o-transition':'0',
-				'-ms-transition':'0',
-				'-transition':'0',
+				'-o-transition':'0ms',
+				'-ms-transition':'0ms',
+				'-transition':'0ms',
 				left:"0px",
 				top:"0px"
 			});
