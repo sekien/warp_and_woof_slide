@@ -1,4 +1,4 @@
-//youkaimapようかいまっぷ
+//youkaimapようかいまっぷmaster
 //http://www.youkaimap.freeiz.com/
 
 (function($){
