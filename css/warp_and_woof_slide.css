@@ -1,0 +1,70 @@
+@charset "utf-8";
+
+
+
+/*panels パネル*/
+.waws_plate span,#dummy span{
+	background-repeat:no-repeat;
+	background-position:center center;
+	background-size:auto 200px;
+}
+
+.waws_plate{
+	display:inline-block;
+	*display:inline;
+    *zoom:1;
+	position:relative;
+}
+
+.waws_plate span{
+	display:inline-block;
+	*display:inline;
+    *zoom:1;
+	width:100px;
+	height:100px;
+	position:absolute;
+	overflow:hidden;
+	z-index:3;
+	/*panel inline border*/
+	/*box-shadow:inset 0 0 0 1px #fff;*/
+}
+
+#dummy{
+	position:absolute;
+}
+
+
+/*ViewWindow ビューウィンドウ*/
+
+#WaWSlargeview{
+	display:none;
+	width:0;
+	height:0;
+	z-index:4;
+	position:absolute;
+	background-color:rgba(0,0,0,0.65);
+}
+
+#WaWSlargeview span{
+	display:block;
+	background-repeat:no-repeat;
+	background-position:center center;
+	cursor:pointer;
+}
+
+#WaWSclose{
+	color:white;
+	text-align:center;
+	width:30px;
+	height:30px;
+	top:0;
+	left:0;
+	margin:0;
+	z-index:5;
+	position:absolute;
+	cursor:pointer;
+	background-repeat:no-repeat;
+	background-position:center center;
+	background-image:url(./image/close.png);
+	background-size:30px 30px;
+}

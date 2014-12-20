@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta name="viewport" content="width=device-width, minimum-scale=1, maximum-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>demo</title>
+<meta http-equiv="Content-Script-Type" content="text/javascript" />
+<meta http-equiv="Content-Style-Type" content="text/css" />
+<link rel="stylesheet" href="css/warp_and_woof_slide.css" type="text/css" />
+<script type="text/javascript" src="js/jquery-1.11.1.min.js"></script>
+<script type="text/javascript" src="js/warp_and_woof_slide0.1.min.js"></script>
+
+<script type="text/javascript">
+	//<![CDATA[
+	$(function(){
+		
+		$("#block").WaWS({
+    		warp:1,
+    		woof:4,
+    		launch:1,
+    		data:[
+    			{image:'./sample/01.jpg',url:'http://www.youkaimap.freeiz.com/',title:'01'},
+    			{image:'./sample/02.jpg',url:'',title:'ひまわり'},
+    			{image:'./sample/03.jpg',url:'',title:'03'},
+    			{image:'./sample/04.jpg',url:'',title:'びわ'},
+    			{image:'./sample/05.jpg',url:'',title:'05'},
+    			{image:'./sample/06.jpg',url:'',title:'06'},
+    			{image:'./sample/07.jpg',url:'',title:'花火'},
+    			{image:'./sample/08.jpg',url:'',title:'スキー'},
+    			{image:'./sample/09.jpg',url:'',title:'09'},
+    			{image:'./sample/10.jpg',url:'',title:'10'},
+    			{image:'./sample/11.jpg',url:'',title:'11'},
+    			{image:'./sample/12.jpg',url:'',title:'12'},
+    			{image:'./sample/13.jpg',url:'',title:'13'},
+    			{image:'./sample/14.jpg',url:'',title:'14'},
+    			{image:'./sample/15.jpg',url:'',title:'わんこ'},
+    			{image:'./sample/16.jpg',url:'',title:'16'},
+    			{image:'./sample/17.jpg',url:'',title:'17'},
+    			{image:'./sample/18.jpg',url:'',title:'18'}
+    		]
+  		});
+		
+	});
+//]]>
+</script>
+
+<style>
+<!--
+	#wrap{
+		width:auto;
+		text-align:center;
+		height:auto;
+	}
+	#block{
+		margin:50px;
+	}
+	li{
+		display:inline-block;
+		ist-style-type: none;
+		margin:20px;
+	}
+-->
+</style>
+
+</head>
+<body>
+	<div id="wrap">
+		<br><br><br>
+    	<div id="block"></div>
+    </div>
+    <!--
+    <br><br><div id="WaWSstopAutoRun">stop</div>
+    -->
+</body>
+
+</html>

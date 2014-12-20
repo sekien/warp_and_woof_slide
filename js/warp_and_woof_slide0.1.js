@@ -565,7 +565,6 @@
 				url:options.data[imgnumber]["url"],
 				title:reserve_push["title"]
 			});
-			//reserve_a.shift();
 			
 		}
 		
