@@ -67,6 +67,30 @@
 		display;hidden;
 		visibility:hidden;
 	}
+	table,td{
+		margin:auto;
+		border:1px solid #555;
+		border-collapse:collapse;
+	}
+	td{
+		text-align:left;
+		vertical-align:top;
+		margin-left:5px;
+		padding:5px;
+	}
+	td p{
+		display:block;
+		text-align:left;
+		margin:5px auto 0 10px;
+		padding:0;
+	}
+	.table_head td{
+		text-align:center;
+	}
+	#exp{
+		text-align:left;
+		border:1px solid #555;
+	}
 -->
 </style>
 
@@ -79,31 +103,87 @@
     		<li><a href="1_4.html" target="_blank">1*4</a></li>
     		<li><a href="5_1.html" target="_blank">5*1</a></li>
     		<li><a href="auto.html" target="_blank">AutoMove</a></li>
+    		<li><a href="https://github.com/sekien/warp_and_woof_slide" target="_blank">download</a></li>
     	</ul>
+    	    <table>
+    		<caption>options</caption>
+    		<tr class="table_head">
+    			<td>name</td><td>variable type</td><td>description</td>
+    		</tr>
+    		<tr>
+    			<td>warp</td><td>number</td><td>vertical panels count. (default:3)</td>
+    		</tr>
+    		<tr>
+    			<td>woof</td><td>number</td><td>horizontal panels count. (default:3)</td>
+    		</tr>
+    		<tr>
+    			<td>data<br><p>image<br>url<br>title</p></td>
+    			<td>object<p>string<br>string<br>string</p></td>
+    			<td>content data.<br><p>image url<br>link url<br>image tiitle *Unique value*</p> <br>{image:'URL string',url:'URL string or null',title:'string'},{...}</td>
+    		</tr>
+    		<tr>
+    			<td>launch</td><td>number</td><td>moved endpoint panel. counting from the upper-left 1, 2, 3, ... (default:5)</td>
+    		</tr>
+    		<tr>
+    			<td>speed</td><td>number</td><td>slide speed /ms. (default:300)</td>
+    		</tr>
+    		<tr>
+    			<td>spped_ajust</td><td>number</td><td>adjust moving speed /ms. (default:100)</td>
+    		</tr>
+    		<tr>
+    			<td>panel_size</td><td>number</td><td>panel pixel size. (default:100)</td>
+    		</tr>
+    		<tr>
+    			<td>auto_slide<br><p>auto_run<br>order<br>interval</p></td>
+    			<td>object<p>boolean<br>string<br>number</p></td>
+    			<td><br><p>auto movement of the panel. true or false. (default:false)
+    			<br>moving direction of content data. 'forward' or 'back' or 'random' (default:forward)
+    			<br>interval of auto movement /ms. (default:10000)</td>
+    		</tr>
+    		<tr>
+    			<td>view<br><p>width<br>height<br>image_max_width<br>image_max_height<br>interval<br>open_url_target<br>close</p></td>
+    			<td>object<p>number<br>number<br>number<br>number<br>number<br>number<br>boolean</p></td>
+    			<td><br><p>ViewWindow width pixel size. (default:300)
+    			<br>ViewWindow height pixel size. (default:300)
+    			<br>drawing image max-width pixel size. (default:280)
+    			<br>drawing image max-height pixel size. (default:280)
+    			<br>time from open to close /ms. (default:5000)
+    			<br>onClick target. '_blank' or '_self' or 'other name' (default:'_blank')
+    			<br>show close button. true or false (default:true)
+    			</td>
+    		</tr>
+    		<tr>
+    			<td colspan="3">
+    			example:<br>
+    				<pre>
+$(selector id).WaWS({
+	warp:1,
+	woof:5,
+	data:[
+		{image:'./sample/01.jpg',url:'http://www.youkaimap.freeiz.com/',title:'01'},
+		{image:'./sample/02.jpg',url:'',title:'Sunflower'},
+		{image:'./sample/03.jpg',url:'',title:'03'}
+	],
+	launch:3,
+	auto_slide:{
+		auto_run:false,
+		order:'random'
+	},
+	view:{
+		width:300,
+		open_url_target:'_self',
+		close:false
+	}
+});
+    				</pre>
+    			</td>
+    		</tr>
+    	</table>
     </div>
+
     <!--
     <br><br><div id="WaWSstopAutoRun">stop</div>
     -->
-    <div id="hiddenblock">
-    <img src="./sample/01.jpg" />
-    <img src="./sample/02.jpg" />
-    <img src="./sample/03.jpg" />
-    <img src="./sample/04.jpg" />
-    <img src="./sample/05.jpg" />
-    <img src="./sample/06.jpg" />
-    <img src="./sample/07.jpg" />
-    <img src="./sample/08.jpg" />
-    <img src="./sample/09.jpg" />
-    <img src="./sample/10.jpg" />
-    <img src="./sample/11.jpg" />
-    <img src="./sample/12.jpg" />
-    <img src="./sample/13.jpg" />
-    <img src="./sample/14.jpg" />
-    <img src="./sample/15.jpg" />
-    <img src="./sample/16.jpg" />
-    <img src="./sample/17.jpg" />
-    <img src="./sample/18.jpg" />
-    </div>
 </body>
 
 </html>

@@ -10,7 +10,7 @@
 			data:[],						//content data. {image:'(URL string)',url:'(URL string or null)',title:'(string *Unique*)'},{...}
 			launch:5,						//moved endpoint panel. counting from the upper-left 1, 2, 3, ... (default:5)
 			speed:300,						//slide speed. (default:300)
-			spped_ajust:100,					//adjust moving speed (default:50)
+			spped_ajust:100,				//adjust moving speed (default:100)
 			panel_size:100,					//panel size. (default:100)
 			auto_slide:{
 				auto_run:false,				//auto movement of the panel. true or false (default:false)
