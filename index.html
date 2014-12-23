@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" href="css/warp_and_woof_slide.css" type="text/css" />
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-<script type="text/javascript" src="js/warp_and_woof_slide0.1.1.js"></script>
+<script type="text/javascript" src="js/warp_and_woof_slide0.1.2.js"></script>
 
 <script type="text/javascript">
 	//<![CDATA[
@@ -37,11 +37,7 @@
     			{image:'./sample/16.jpg',url:'',title:'16'},
     			{image:'./sample/17.jpg',url:'',title:'17'},
     			{image:'./sample/18.jpg',url:'',title:'18'}
-    		],
-    		auto_slide:{
-    			auto_run:false,
-    			order:'random'
-    		}
+    		]
   		});
 		
 	});
@@ -167,12 +163,8 @@ $(selector id).WaWS({
 	launch:3,
 	auto_slide:{
 		auto_run:false,
-		order:'random'
-	},
-	view:{
-		width:300,
-		open_url_target:'_self',
-		close:false
+		order:'random',
+		interval:5000
 	}
 });
     				</pre>
