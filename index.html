@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" href="css/warp_and_woof_slide.css" type="text/css" />
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-<script type="text/javascript" src="js/warp_and_woof_slide0.1.2.js"></script>
+<script type="text/javascript" src="js/warp_and_woof_slide0.1.3.js"></script>
 
 <script type="text/javascript">
 	//<![CDATA[
@@ -37,7 +37,12 @@
     			{image:'./sample/16.jpg',url:'',title:'16'},
     			{image:'./sample/17.jpg',url:'',title:'17'},
     			{image:'./sample/18.jpg',url:'',title:'18'}
-    		]
+    		],
+    		auto_slide:{
+				auto_run:false,
+				order:'random',
+				interval:300
+			}
   		});
 		
 	});
@@ -124,7 +129,7 @@
     			<td>speed</td><td>number</td><td>slide speed /ms. (default:300)</td>
     		</tr>
     		<tr>
-    			<td>spped_ajust</td><td>number</td><td>adjust moving speed /ms. (default:100)</td>
+    			<td>spped_adjust</td><td>number</td><td>timing of open the ViewWindow and turn /ms. (default:100)</td>
     		</tr>
     		<tr>
     			<td>panel_size</td><td>number</td><td>panel pixel size. (default:100)</td>
