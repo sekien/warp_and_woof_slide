@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <link rel="stylesheet" href="css/warp_and_woof_slide.css" type="text/css" />
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.2.js"></script>
-<script type="text/javascript" src="js/warp_and_woof_slide0.1.3.js"></script>
+<script type="text/javascript" src="js/warp_and_woof_slide0.2.js"></script>
 
 <script type="text/javascript">
 	//<![CDATA[
@@ -18,7 +18,7 @@
     		warp:4,
     		woof:4,
     		launch:1,
-    		panel_size:100,
+    		panel_size:75,
     		data:[
     			{image:'./sample/01.jpg',url:'http://www.youkaimap.freeiz.com/',title:'01'},
     			{image:'./sample/02.jpg',url:'',title:'ひまわり'},
@@ -41,7 +41,14 @@
     		],
     		auto_slide:{
     			auto_run:true,
-    			order:'random'
+    			order:'random',
+    			interval:5000
+    		},
+    		view:{
+    			width:280,
+    			height:210,
+    			image_max_width:200,
+				image_max_height:200
     		}
   		});
 		
