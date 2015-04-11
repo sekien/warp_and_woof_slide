@@ -10,7 +10,7 @@
 			data:[],						//content data. {image:'(URL string)',url:'(URL string or null)',title:'(string *Unique*)'},{...}
 			launch:5,						//moved endpoint panel. counting from the upper-left 1, 2, 3, ... (default:5)
 			speed:300,						//slide speed. (default:300)
-			spped_ajust:100,				//adjust moving speed (default:100)
+			spped_adjust:100,				//adjust moving speed (default:100)
 			panel_size:100,					//panel size. (default:100)
 			auto_slide:{
 				auto_run:false,				//auto movement of the panel. true or false (default:false)
@@ -70,6 +70,11 @@
 		if(!(options.view['close'])){
 			options.view.close = true;
 		}
+		if(options.auto_slide['auto_run'] == true){
+			var ats = 1;
+		}else{
+			var ats = 0;
+		}
 		
 		var slide_speed = options.speed;
 		var block_w = options.woof*options.panel_size+"px";
@@ -101,30 +106,32 @@
 		var _this;
 		
 		var img ={};
-		for(var i=0;i<options.data.length;i++){
+		var odlen = options.data.length;
+		for(var i=0;i<odlen;i++){
 			img[i] = new Image();
 			img[i].src = options.data[i]["image"];
 			l++;
 		}
 		
-		if(options.data.length > options.warp*options.woof){
+		if(odlen > options.warp*options.woof){
 			var l = 0;
 			reserve_a[l] = [];
-			for(var i=options.warp*options.woof;i<options.data.length;i++){
+			for(var i=options.warp*options.woof;i<odlen;i++){
 				reserve_a[l] = options.data[i];
 				l++;
 			}
 		}
 		
+		var autoTimerID;
 		var autoTimer = function(obj){
 			if(options.auto_slide['auto_run'] == true){
-				var autoTimerID = setTimeout(function(){
+				autoTimerID = setTimeout(function(){
 					obj.autoMove(autoTimerID);
 				},options.auto_slide['interval']);
 			}
+			//console.log(autoTimerID);
 			return autoTimerID;
 		}
-		
 		
 		//Constructor
 		var MakePanel = function(){
@@ -146,12 +153,10 @@
 				this.bgselect = "#waws_p"+(i+1)+" span";
 				$(blockid).append(this.panels);
 				
-				if(i  < options.data.length){
-					$(this.bgselect).css('background-image','url('+options.data[i]["image"]+')');
-					$(this.bgselect).attr('alt',options.data[i]["title"]);
+				if(i  < odlen){
+					$(this.bgselect).css('background-image','url('+options.data[i]["image"]+')').attr('alt',options.data[i]["title"]);
 				}else{
-					$(this.bgselect).css('background-image','url('+options.data[m]["image"]+')');
-					$(this.bgselect).attr('alt',options.data[m]["title"]);
+					$(this.bgselect).css('background-image','url('+options.data[m]["image"]+')').attr('alt',options.data[m]["title"]);
 					m++;
 				}
 				
@@ -170,7 +175,8 @@
 				k++;
 			}
 			
-			$(".waws_plate,.waws_plate span").css({
+			var plats = ".waws_plate,.waws_plate span";
+			$(plats).css({
 				'width':this.p_size,
 				'height':this.p_size
 			});
@@ -183,6 +189,12 @@
 		MakePanel.prototype.setPanel = function(cp1,cp2){
 			var move_warp;
 			var move_woof;
+			
+			if(last_way == 0){
+				last_way = 1;
+			}else{
+				last_way = 0;
+			}
 			
 			if(cp1 < z_p_warp){
 				move_warp = "d";
@@ -199,6 +211,8 @@
 			}else{
 				move_woof = "n";
 			}
+			
+			//console.log("set");
 			
 			this.slideAnimation(cp1,cp2,move_warp,move_woof);
 		}
@@ -259,22 +273,33 @@
 				}
 			}
 			
-			if(reserve_push.hasOwnProperty('image')){
-				reserve_a.shift();
+			var reserveShift = function(){
+				if(reserve_push.hasOwnProperty('image')){
+					reserve_a.shift();
+				}
 			}
 			
-			this.setDummySpan(cp1,cp2,move_warp,move_woof);
-			this.slideAnimation2(savearray,altarray,slideway,cp1,cp2,move_warp,move_woof);
+			
+			
+			var promise = $.when(
+				reserveShift()
+				//,console.log("shift")
+			);
+			_this = this;
+			promise.done(function(){
+				_this.setDummySpan(savearray,altarray,slideway,cp1,cp2,move_warp,move_woof);
+			});
 			
 		}
 		
 		
 		//Set dummy
-		MakePanel.prototype.setDummySpan = function(cp1,cp2,move_warp,move_woof){
+		MakePanel.prototype.setDummySpan = function(savearray,altarray,slideway,cp1,cp2,move_warp,move_woof){
 			var dummyspan = '<span id="WaWS_dummy"></span>'
 			var firstspan;
 			var	lastspan;
 			var dummyurl = "";
+			var did = "#WaWS_dummy";
 			
 			var setDummySapnWarp = function(p_size,n_size,aww){
 				firstspan = '#'+aww[0][cp2] + " span";
@@ -284,13 +309,13 @@
 					$(lastspan).after(function(){
 						return dummyspan;
 					});
-					$("#WaWS_dummy").css("top",p_size);
+					$(did).css("top",p_size);
 				}else if(move_warp == "d"){
 					dummyurl = $(lastspan).css('background-image');
 					$(firstspan).before(function(){
 						return dummyspan;
 					});
-					$("#WaWS_dummy").css("top",n_size);
+					$(did).css("top",n_size);
 				}
 			}
 			
@@ -302,13 +327,13 @@
 					$(lastspan).after(function(){
 						return dummyspan;
 					});
-					$("#WaWS_dummy").css("left",p_size);
+					$(did).css("left",p_size);
 				}else if(move_woof == "r"){
 					dummyurl = $(lastspan).css('background-image');
 					$(firstspan).before(function(){
 						return dummyspan;
 					});
-					$("#WaWS_dummy").css("left",n_size);
+					$(did).css("left",n_size);
 				}
 			}
 			
@@ -330,10 +355,19 @@
 				dummyurl = "url("+reserve_a[0]["image"]+")";
 			}
 			
-			$("#WaWS_dummy").css({
-				'background-image':dummyurl,
-				'width':this.p_size,
-				'height':this.p_size
+			
+			
+			var promise = $.when(
+				$(did).css({
+					'background-image':dummyurl,
+					'width':this.p_size,
+					'height':this.p_size
+				})
+			);
+			_this = this;
+			promise.done(function(){
+				//console.log("set_dummy");
+				_this.slideAnimation2(savearray,altarray,slideway,cp1,cp2,move_warp,move_woof);
 			});
 			
 		}
@@ -342,6 +376,7 @@
 		//panels and dummy slide
 		MakePanel.prototype.slideAnimation2 = function(savearray,altarray,slideway,cp1,cp2,move_warp,move_woof){
 			var spanid = "";
+			_this = this;
 			
 			var clearcss = ({
 				'-webkit-transform':'none',
@@ -349,17 +384,18 @@
 				'-o-transform':'none',
 				'-ms-transform':'none',
 				'transform':'none',
-				'-webkit-transition':'0ms',
-				'-moz-transition':'0ms',
-				'-o-transition':'0ms',
-				'-ms-transition':'0ms',
-				'-transition':'0ms',
-				left:"0px",
-				top:"0px"
+				'-webkit-transition':'none 0ms ease 0',
+				'-moz-transition':'none',//firefox setting!!
+				'-o-transition':'none 0ms ease 0',
+				'-ms-transition':'none 0ms ease 0',
+				'-transition':'none 0ms ease 0',
+				left:"0",
+				top:"0"
 			});
 			
 			
 			var slideAnimeWarp = function(aww){
+				var change_cnt = 0;
 				for(var i=0;i<options.warp;i++){
 					spanid = "#"+aww[i][cp2]+", +span ,+#WaWS_dummy";
 					$(spanid).css({
@@ -373,15 +409,22 @@
 						'-o-transition':slide_speed+'ms',
 						'-ms-transition':slide_speed+'ms',
 						'transition':slide_speed+'ms'
-					}).one("webkitTransitionEnd transitionend oTransitionEnd msTransitionEnd",function(){
+					}).one("webkitTransitionEnd mozTransitionEnd oTransitionEnd msTransitionEnd transitionend",function(){
 						$(this).css(clearcss);
-						MakePanel.prototype.setSlidePanelvalue(savearray,altarray,cp1,cp2,move_warp,move_woof,aww);
+						change_cnt += _this.setSlidePanelvalue(savearray,altarray,cp1,cp2,move_warp,move_woof,aww);
+						//console.log(change_cnt);
+						if(change_cnt == options.warp){
+							//console.log("warp:"+options.warp);
+							_this.checkPanelPosition();
+						}
 					});
 				}
+				
 			}
 			
 			
 			var slideAnimeWoof = function(aww){
+				var change_cnt = 0;
 				for(var i=0;i<options.woof;i++){
 					spanid = "#"+aww[cp1][i]+", +span ,+#WaWS_dummy";
 					$(spanid).css({
@@ -395,9 +438,14 @@
 						'-o-transition':slide_speed+'ms',
 						'-ms-transition':slide_speed+'ms',
 						'transition':slide_speed+'ms'
-					}).one("webkitTransitionEnd transitionend oTransitionEnd msTransitionEnd",function(){
+					}).one("webkitTransitionEnd mozTransitionEnd oTransitionEnd msTransitionEnd transitionend",function(){
 						$(this).css(clearcss);
-						MakePanel.prototype.setSlidePanelvalue(savearray,altarray,cp1,cp2,move_warp,move_woof,aww);
+						change_cnt += _this.setSlidePanelvalue(savearray,altarray,cp1,cp2,move_warp,move_woof,aww);
+						//console.log(change_cnt);
+						if(change_cnt == options.woof){
+							//console.log("warp:"+options.warp);
+							_this.checkPanelPosition();
+						}
 					});
 				}
 			}
@@ -450,16 +498,13 @@
 				}
 			}
 			
-			
-			
-			
-			this.checkPanelPosition();
 		}
 		
 		
 		//After the movement,Change pales value
 		MakePanel.prototype.setSlidePanelvalue = function(savearray,altarray,cp1,cp2,move_warp,move_woof,aww){
 			var panel = "";
+			var return_v = 1;
 			var fist_r_span = "";
 			$("#WaWS_dummy").remove();
 			
@@ -468,8 +513,7 @@
 				if(reserve_a[0] != null){
 					reserve_push_ex["image"] = $(id).css('background-image');
 					reserve_push_ex["title"] = $(id).attr('alt');
-					$(id).css('background-image','url('+reserve_a[0]["image"]+')');
-					$(id).attr('alt',reserve_a[0]["title"]);
+					$(id).css('background-image','url('+reserve_a[0]["image"]+')').attr('alt',reserve_a[0]["title"]);
 				}else{
 					return false;
 				}
@@ -481,21 +525,18 @@
 				if(move_warp == "u"){
 					for(var i=0;i<options.warp;i++){
 						panel = '#'+aww[i][cp2]+' span';
-						$(panel).css('background-image',savearray[i+1]);
-						$(panel).attr('alt',altarray[i+1]);
+						$(panel).css('background-image',savearray[i+1]).attr('alt',altarray[i+1]);
 					}
-					$(panel).css('background-image',savearray[0]);
-					$(panel).attr('alt',altarray[0]);
+					//console.log("1:"+panel+":"+$(panel).css('background-image'));
+					$(panel).css('background-image',savearray[0]).attr('alt',altarray[0]);
 					reserve_push_fix = getReserve(panel);
 				}else if(move_warp == "d"){
 					for(var i=0;i<options.warp;i++){
 						panel = '#'+aww[i][cp2]+' span';
 						if(i ==0){
-							$(panel).css('background-image',savearray[savearray.length-1]);
-							$(panel).attr('alt',altarray[altarray.length-1]);
+							$(panel).css('background-image',savearray[savearray.length-1]).attr('alt',altarray[altarray.length-1]);
 						}else{
-							$(panel).css('background-image',savearray[i-1]);
-							$(panel).attr('alt',altarray[i-1]);
+							$(panel).css('background-image',savearray[i-1]).attr('alt',altarray[i-1]);
 						}
 					}
 					fist_r_span = '#'+aww[0][cp2]+' span';
@@ -509,21 +550,17 @@
 				if(move_woof == "l"){
 					for(var i=0;i<options.woof;i++){
 						panel = '#'+aww[cp1][i]+' span';
-						$(panel).css('background-image',savearray[i+1]);
-						$(panel).attr('alt',altarray[i+1]);
+						$(panel).css('background-image',savearray[i+1]).attr('alt',altarray[i+1]);
 					}
-					$(panel).css('background-image',savearray[0]);
-					$(panel).attr('alt',altarray[0]);
+					$(panel).css('background-image',savearray[0]).attr('alt',altarray[0]);
 					reserve_push_fix = getReserve(panel);
 				}else if(move_woof == "r"){
 					for(var i=0;i<options.woof;i++){
 						panel = '#'+aww[cp1][i]+' span';
 						if(i ==0){
-							$(panel).css('background-image',savearray[savearray.length-1]);
-							$(panel).attr('alt',altarray[altarray.length-1]);
+							$(panel).css('background-image',savearray[savearray.length-1]).attr('alt',altarray[altarray.length-1]);
 						}else{
-							$(panel).css('background-image',savearray[i-1]);
-							$(panel).attr('alt',altarray[i-1]);
+							$(panel).css('background-image',savearray[i-1]).attr('alt',altarray[i-1]);
 						}
 					}
 					fist_r_span = '#'+aww[cp1][0]+' span';
@@ -532,22 +569,22 @@
 				return reserve_push_fix;
 			}
 			
-			var reserve_push_set = [];
 			if(last_way == 0){
 				if(move_warp != "n"){
-					reserve_push_set = setSlidePanelWarp(aww);
+					reserve_push = setSlidePanelWarp(aww);
 				}else{
-					reserve_push_set = setSlidePanelWoof(aww);
+					reserve_push = setSlidePanelWoof(aww);
 				}
 			}else{
 				if(move_woof != "n"){
-					reserve_push_set = setSlidePanelWoof(aww);
+					reserve_push = setSlidePanelWoof(aww);
 				}else{
-					reserve_push_set = setSlidePanelWarp(aww);
+					reserve_push = setSlidePanelWarp(aww);
 				}
 			}
 			
-			reserve_push = reserve_push_set;
+			//console.log("chage_value");
+			return return_v;
 		}
 		
 		
@@ -555,48 +592,48 @@
 		MakePanel.prototype.checkPanelPosition = function(){
 			var cpp_alt = this.base_alt;
 			_this = this;
+			//console.log("check");
 			
 			if(select_p[0] == z_p_warp && select_p[1] == z_p_woof){
 				var opentimer = setTimeout(function(){
 					_this.openLargeWindow(opentimer);
-				},slide_speed+options.spped_ajust);
+				},options.spped_adjust);
 			}else{
 				setTimeout(function(){
-					_this.reserveDataPush(cpp_alt);
-					if(last_way == 0){
-						last_way = 1;
-					}else{
-						last_way = 0;
-					}
-					_this.setPanel(select_p[0],select_p[1]);
-				},slide_speed+options.spped_ajust);
+					var ctn = 1;
+					_this.reserveDataPush(ctn);
+				},options.spped_adjust);
 			}
 		}
 		
 		
-		//Push and Shift preliminary data
-		MakePanel.prototype.reserveDataPush = function(){
+		//Push preliminary data
+		MakePanel.prototype.reserveDataPush = function(ctn){
+			var imgnumber = 0;
 			if(reserve_push["image"]){
 				reserve_push["image"] = reserve_push["image"].replace("url(","");
 				reserve_push["image"] = reserve_push["image"].replace(")","");
 				var title = this.base_alt;
-				var imgnumber = 0;
-				for(var i = 0, len = options.data.length; i < len; i++){
+				for(var i=0; i<odlen; i++){
 					if(i in options.data && options.data[i]['title'] === title){
 						imgnumber = i;
 						break;
 					}
 				}
-			}else{
-				return false;
+				
+				reserve_a.push({
+					image:reserve_push["image"],
+					url:options.data[imgnumber]["url"],
+					title:reserve_push["title"]
+				});
+				
 			}
 			
-			reserve_a.push({
-				image:reserve_push["image"],
-				url:options.data[imgnumber]["url"],
-				title:reserve_push["title"]
-			});
+			//console.log("push");
 			
+			if(ctn == 1){
+				this.setPanel(select_p[0],select_p[1]);
+			}
 		}
 		
 		
@@ -608,8 +645,10 @@
 			var imgnumber = 0;
 			var view_idle = 0;
 			_this = this;
+			var lvid = "#WaWSlargeview";
+			var lvs = "#WaWSlargeview span";
 			
-			for(var i = 0, len = options.data.length; i < len; i++){
+			for(var i = 0; i<odlen; i++){
 				if(i in options.data && options.data[i]['title'] === title){
 					imgnumber = i;
 					break;
@@ -620,12 +659,11 @@
 			
 			var offset = $(blockid).offset();
 			
-			$("#WaWSlargeview").css({
+			$(lvid).css({
 				'left':(offset.left+$(blockid).width()/2)+'px',
 				'top':(offset.top+$(blockid).height()/2)+'px'
 			});
 			
-			img[imgnumber].src = options.data[imgnumber]["image"];
 			var imgwidth  = img[imgnumber].width;
 			var imgheight = img[imgnumber].height;
 			var imgsize;
@@ -633,18 +671,18 @@
 			
 			if(imgwidth > imgheight){
 				imgsize = options.view["image_max_width"]+'px auto';
-				$("#WaWSlargeview span").css('background-size',imgsize);
+				$(lvs).css('background-size',imgsize);
 			}else{
 				imgsize = 'auto '+options.view["image_max_height"]+'px';
-				$("#WaWSlargeview span").css('background-size',imgsize);
+				$(lvs).css('background-size',imgsize);
 			}
 			
-			$("#WaWSlargeview span").attr('title',options.data[imgnumber]["title"]);
+			$(lvs).attr('title',options.data[imgnumber]["title"]);
 			
-			$("#WaWSlargeview").show().css({
+			$(lvid).show().css({
 				'border':'1px solid #000',
 				'left':(offset.left+$(blockid).width()/2)-options.view["width"]/2+'px',
-				'top':(offset.top+$(blockid).height()/2)-options.view["height"]/2-16+'px',
+				'top':(offset.top+$(blockid).height()/2)-options.view["height"]/2+'px',
 				'width':options.view["width"],
 				'height':options.view["height"],
 				'-webkit-transition-property':'width,height',
@@ -657,12 +695,12 @@
 				'-o-transition':slide_speed+'ms',
 				'-ms-transition':slide_speed+'ms',
 				'transition':slide_speed+'ms'
-			}).one("webkitTransitionEnd transitionend oTransitionEnd msTransitionEnd",function(){
+			}).one("webkitTransitionEnd mozTransitionEnd oTransitionEnd msTransitionEnd transitionend",function(){
 				if(options.view["close"] == true && !($("#WaWSclose")[0])){
-					$("#WaWSlargeview").append('<div id="WaWSclose"></div>');
+					$(lvid).append('<div id="WaWSclose"></div>');
 				}
 				
-				$("#WaWSlargeview span").css({
+				$(lvs).css({
 					'background-image':'url('+options.data[imgnumber]["image"]+')',
 					'width':imgwidth+'px',
 					'height':imgheight+'px',
@@ -680,7 +718,7 @@
 			
 			var closeView = function(){
 				$("#WaWSlargeview span,#WaWSclose").remove();
-				$("#WaWSlargeview").css({
+				$(lvid).css({
 					'opacity':'0',
 					'-webkit-transform':'scale(0.1)',
 					'-moz-transform':'scale(0.1)',
@@ -692,12 +730,16 @@
 					'-o-transition':slide_speed+'ms',
 					'-ms-transition':slide_speed+'ms',
 					'transition':slide_speed+'ms'
-				}).one("webkitTransitionEnd transitionend oTransitionEnd msTransitionEnd",function(){
-					$("#WaWSlargeview").remove();
+				}).one("webkitTransitionEnd mozTransitionEnd oTransitionEnd msTransitionEnd transitionend",function(){
+					$(lvid).remove();
 					clearTimeout(timerId);
 					timerId = null;
 					idle = 1;
-					autoTimer(_this);
+					//console.log("close");
+					if(ats == 1){
+						options.auto_slide["auto_run"] = true;
+						autoTimer(_this);
+					}
 				});
 			}
 			
@@ -764,7 +806,7 @@
 			
 			timerClose();
 			
-			$("#WaWSlargeview span").on('click',function(){
+			$(lvs).on('click',function(){
 				if(options.data[imgnumber]["url"] == ""){
 					if(timerId){
 						closeView();
@@ -785,9 +827,11 @@
 		//Auto-run
 		MakePanel.prototype.autoMove = function(autoTimerID){
 			stopTimer(autoTimerID);
+			//console.log(autoTimerID);
 			idle = 0;
 			var rnd = [];
 			var l_p_id;
+			
 			
 			var searchPanelPoint = function(l_p_id){
 				var sl_p = [];
@@ -844,8 +888,8 @@
 			}
 			
 			function stopTimer(autoTimerID){
+				options.auto_slide["auto_run"] = false;
 				clearTimeout(autoTimerID);
-				autoTimerID = null;
 			}
 		}
 		
@@ -854,9 +898,18 @@
 		waws.each(function(){
 			var Waws = new MakePanel();
 			
+			if(idle == 1){
+				var auto_run_Id = autoTimer(Waws);
+			}
+			
 			$(".waws_plate").bind('click',function(){
 				if(idle == 1){
 					idle = 0;
+					
+					options.auto_slide["auto_run"] = false;
+					//console.log("stop:"+autoTimerID);
+					clearTimeout(autoTimerID);
+					
 					var thisid = $(this).attr("id");
 					var this_span = "#"+thisid+" span";
 					Waws.base_alt = $(this_span).attr("alt");
@@ -880,10 +933,7 @@
 			});
 			
 			
-			var auto_run_Id;
-			if(idle == 1){
-				auto_run_Id = autoTimer(Waws);
-			}
+			
 			
 			
 			
