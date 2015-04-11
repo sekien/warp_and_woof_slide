@@ -6,6 +6,8 @@ This jQuery plugin is simple slideshow.
 Demo
 ---------------------------------
 
+![DEMO](http://www.youkaimap.freeiz.com/waws/ss.gif "screen shot")
+
 <http://www.youkaimap.freeiz.com/waws/index.html>
 
 Requirements
@@ -16,7 +18,13 @@ Requirements
 Usage
 ---------------------------------
 
-$(id).WaWS();
+    $(selector id).WaWS({
+      data:[
+        {image:' image path ',url:' URL to open on click ',title:' this title '},
+        {image:' image path 2 ,url:' may be a blank ',title:' title 2 '},
+        {image:' image path 3 ',url:'',title:' title 3 '}
+     ]
+    });
 
 options&amp;example:[here](http://www.youkaimap.freeiz.com/waws/index.html "usage")
 
