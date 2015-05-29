@@ -6,9 +6,9 @@ This jQuery plugin is simple slideshow.
 Demo
 ---------------------------------
 
-![DEMO](http://www.youkaimap.freeiz.com/waws/ss.gif "screen shot")
+![DEMO](http://youkaimap.php.xdomain.jp/waws/ss.gif "screen shot")
 
-<http://www.youkaimap.freeiz.com/waws/index.html>
+<http://youkaimap.php.xdomain.jp/waws/index.html>
 
 Requirements
 ---------------------------------
@@ -26,7 +26,7 @@ Usage
      ]
     });
 
-options&amp;example:[here](http://www.youkaimap.freeiz.com/waws/index.html "usage")
+options&amp;example:[here](http://youkaimap.php.xdomain.jp/waws/index.html "usage")
 
 Licence
 ---------------------------------
